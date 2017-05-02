@@ -71,35 +71,48 @@ webElem$sendKeysToElement(list(key= "enter"))
 my_source <-  remDr$getPageSource
 webElem$screenshot(useView  = TRUE, display = TRUE)
 
+# copper ----
 remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
 tableElem <- remDr$findElement("css", "table")
 # tableElem$highlightElement()
 
-res <-  readHTMLTable(tableElem$getElementAttribute("outerHTML")[[1]])
-View(res)
-# clean up table ----
-res <- as.data.frame(res[1])
-colnames(res) <- as.character(unlist(res[3,]))
-res <- res[-c(1:3), ]
+copper <-  readHTMLTable(tableElem$getElementAttribute("outerHTML")[[1]])
+View(copper)
+# clean up table
+copper <- as.data.frame(copper[1])
+colnames(copper) <- as.character(unlist(copper[3,]))
+copper <- copper[-c(1:3), ]
+
+# zinc ----
+remDr$navigate("https://www.metalprices.com/feeds/shfe/zinc")
+tableElem <- remDr$findElement("css", "table")
+# tableElem$highlightElement()
+
+zinc <-  readHTMLTable(tableElem$getElementAttribute("outerHTML")[[1]])
+View(zinc)
+# clean up table
+zinc <- as.data.frame(zinc[1])
+colnames(zinc) <- as.character(unlist(zinc[3,]))
+zinc <- zinc[-c(1:3), ]
 
 # Use if "Switch Element" button shows it's ugly head ----
 # SwitchElem <- remDr$findElement("css", "input")
 # SwitchElem$clickElement()
 
-remDr$navigate("https://www.metalprices.com/a/Logout")
-webElem <- remDr$findElement(using = "css", "input")
-webElem$clickElement()
-remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
-copper <-  html_session("https://www.metalprices.com/feeds/shfe/copper")
-
-copper %>% html_node(css = "td:nth-child(4)") %>% html_text() %>% .[1:12] 
-
-copper_html <- read_html("https://www.metalprices.com/feeds/shfe/copper") %>% 
-  html_node("#td .qFieldChgNone") %>% 
-  html_text()
-
-library(XML)  
-readHTMLTable(content(copper_response))
+# remDr$navigate("https://www.metalprices.com/a/Logout")
+# webElem <- remDr$findElement(using = "css", "input")
+# webElem$clickElement()
+# remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
+# copper <-  html_session("https://www.metalprices.com/feeds/shfe/copper")
+# 
+# copper %>% html_node(css = "td:nth-child(4)") %>% html_text() %>% .[1:12] 
+# 
+# copper_html <- read_html("https://www.metalprices.com/feeds/shfe/copper") %>% 
+#   html_node("#td .qFieldChgNone") %>% 
+#   html_text()
+# 
+# library(XML)  
+# readHTMLTable(content(copper_response))
 
 
 remDr$close()
