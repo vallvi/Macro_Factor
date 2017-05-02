@@ -95,6 +95,7 @@ zinc <- as.data.frame(zinc[1])
 colnames(zinc) <- as.character(unlist(zinc[3,]))
 zinc <- zinc[-c(1:3), ]
 
+# metal table ----
 metal <- rbind(copper, zinc)
 
 # Use if "Switch Element" button shows it's ugly head ----
