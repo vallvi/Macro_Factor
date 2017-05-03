@@ -5,7 +5,6 @@ library(lubridate)
 # Oil spot price ----
 url_eai <- "http://api.eia.gov/series/?api_key=e68cbc39eaf4d0a7722c4ee62491ac7d&series_id=PET.RWTC.D&out=json"
 
-# url_eai <- "http://api.eia.gov"
 Oil_eia <- GET(url = url_eai)
 
 Oil_eia_content <- rawToChar(Oil_eia$content)
@@ -29,7 +28,8 @@ names(oil_df)[1:2] <- c("Date", "Price")
 
 oil_df$Price <- as.numeric(levels(oil_df$Price))[oil_df$Price]
 
-# Futures ----
+# Experimental section ----
+# Futures
 url_eai <- "http://api.eia.gov/series/?api_key=e68cbc39eaf4d0a7722c4ee62491ac7d&series_id=PET.RCLC1.M"
 
 Oil_eia <- GET(url = url_eai)

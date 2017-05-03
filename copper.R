@@ -38,12 +38,24 @@ webElem$getElementAttribute("value")
 webElem <- remDr$findElement(using = "name", "Password")
 webElem$sendKeysToElement(list("gapster6"))
 webElem$getElementAttribute("value")
+Sys.sleep(2)
 webElem$sendKeysToElement(list(key= "enter"))
 
-webElem$screenshot(useView  = TRUE, display = TRUE)
+# my_source <- remDr$getPageSource()
+# webElem$screenshot(useView  = TRUE, display = TRUE)
 
 # copper ----
 remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
+
+my_source <- remDr$getPageSource()
+webElem$screenshot(useView  = TRUE, display = TRUE)
+
+if(!grepl("SHFE Copper Feed", my_source)){ 
+  SwitchElem <- remDr$findElement("css", "input")
+  SwitchElem$clickElement()
+  #remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
+}
+
 tableElem <- remDr$findElement("css", "table")
 
 copper <-  readHTMLTable(tableElem$getElementAttribute("outerHTML")[[1]])
@@ -71,6 +83,8 @@ metal <- rbind(copper, zinc)
 # Use if "Switch Element" button shows it's ugly head ----
 # SwitchElem <- remDr$findElement("css", "input")
 # SwitchElem$clickElement()
+remDr$close()
+pJS$stop()
 
 # EXP ----
 # remDr$navigate("https://www.metalprices.com/a/Logout")
