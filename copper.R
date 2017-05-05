@@ -20,7 +20,7 @@ remDr$open()
 Sys.sleep(2)
 
 remDr$navigate("https://www.metalprices.com/a/Login")
-Sys.sleep(8)
+Sys.sleep(6)
 
 remDr$getCurrentUrl()
 # remDr$refresh()
@@ -36,6 +36,7 @@ webElem$getElementAttribute("value")
 #webElem$sendKeysToElement(list(key= "tab"))
 
 webElem <- remDr$findElement(using = "name", "Password")
+Sys.sleep(2)
 webElem$sendKeysToElement(list("gapster6"))
 webElem$getElementAttribute("value")
 Sys.sleep(2)
@@ -46,17 +47,18 @@ webElem$sendKeysToElement(list(key= "enter"))
 
 # copper ----
 remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
-
+Sys.sleep(6)
 my_source <- remDr$getPageSource()
 webElem$screenshot(useView  = TRUE, display = TRUE)
 
-if(!grepl("SHFE Copper Feed", my_source)){ 
+if(grepl("Switch Device", my_source)){ 
   SwitchElem <- remDr$findElement("css", "input")
   SwitchElem$clickElement()
   #remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
 }
 
 tableElem <- remDr$findElement("css", "table")
+Sys.sleep(2)
 
 copper <-  readHTMLTable(tableElem$getElementAttribute("outerHTML")[[1]])
 View(copper)
@@ -64,9 +66,22 @@ View(copper)
 copper <- as.data.frame(copper[1])
 colnames(copper) <- as.character(unlist(copper[3,]))
 copper <- copper[-c(1:3), ]
+copper <- droplevels(copper)
+levels(copper$Future) <- c("Copper")
+
 
 # zinc ----
 remDr$navigate("https://www.metalprices.com/feeds/shfe/zinc")
+Sys.sleep(6)
+my_source <- remDr$getPageSource()
+webElem$screenshot(useView  = TRUE, display = TRUE)
+
+if(grepl("Switch Device", my_source)){ 
+  SwitchElem <- remDr$findElement("css", "input")
+  SwitchElem$clickElement()
+  #remDr$navigate("https://www.metalprices.com/feeds/shfe/copper")
+}
+
 tableElem <- remDr$findElement("css", "table")
 # tableElem$highlightElement()
 
@@ -76,9 +91,12 @@ View(zinc)
 zinc <- as.data.frame(zinc[1])
 colnames(zinc) <- as.character(unlist(zinc[3,]))
 zinc <- zinc[-c(1:3), ]
+zinc <- droplevels(zinc)
+levels(zinc$Future) <- "Zinc"
 
 # metal table ----
 metal <- rbind(copper, zinc)
+metal <- droplevels(metal)
 
 # Use if "Switch Element" button shows it's ugly head ----
 # SwitchElem <- remDr$findElement("css", "input")
